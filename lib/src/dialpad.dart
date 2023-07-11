@@ -9,7 +9,9 @@ import 'widgets/action_button.dart';
 
 class DialPadWidget extends StatefulWidget {
   final SIPUAHelper? _helper;
+
   DialPadWidget(this._helper, {Key? key}) : super(key: key);
+
   @override
   _MyDialPadWidget createState() => _MyDialPadWidget();
 }
@@ -17,6 +19,7 @@ class DialPadWidget extends StatefulWidget {
 class _MyDialPadWidget extends State<DialPadWidget>
     implements SipUaHelperListener {
   String? _dest;
+
   SIPUAHelper? get helper => widget._helper;
   TextEditingController? _textController;
   late SharedPreferences _preferences;
@@ -90,7 +93,19 @@ class _MyDialPadWidget extends State<DialPadWidget>
       mediaStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
     }
 
-    helper!.call(dest, voiceonly: voiceOnly, mediaStream: mediaStream);
+    List<Map<String, String>> iceServers = <Map<String, String>>[
+      <String, String>{'url': 'stun:stun.l.google.com:19302'},
+    ];
+
+    Map<String, dynamic> customOptions = <String, dynamic>{
+      'pcConfig': <String, dynamic>{
+        'sdpSemantics': 'unified-plan',
+        'rtcpMuxPolicy': 'negotiate',
+        'iceServers': iceServers
+      },
+    };
+
+    helper!.call(dest, voiceonly: voiceOnly, mediaStream: mediaStream, customOptions: customOptions);
     _preferences.setString('dest', dest);
     return null;
   }
