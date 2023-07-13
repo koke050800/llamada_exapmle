@@ -1,9 +1,7 @@
-import 'package:flutter/foundation.dart'
-    show debugDefaultTargetPlatformOverride;
+import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:sip_ua/sip_ua.dart';
-
 
 import 'src/about.dart';
 import 'src/callscreen.dart';
@@ -20,8 +18,12 @@ void main() {
 typedef PageContentBuilder = Widget Function(
     [SIPUAHelper? helper, Object? arguments]);
 
-// ignore: must_be_immutable
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final SIPUAHelper _helper = SIPUAHelper();
   Map<String, PageContentBuilder> routes = {
     '/': ([SIPUAHelper? helper, Object? arguments]) => DialPadWidget(helper),

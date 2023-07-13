@@ -4,6 +4,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sip_ua/sip_ua.dart';
+import 'package:uni_links/uni_links.dart';
 
 import 'widgets/action_button.dart';
 
@@ -18,6 +19,10 @@ class DialPadWidget extends StatefulWidget {
 
 class _MyDialPadWidget extends State<DialPadWidget>
     implements SipUaHelperListener {
+
+  String textito = '';
+  Uri? uri;
+
   String? _dest;
 
   SIPUAHelper? get helper => widget._helper;
@@ -29,14 +34,31 @@ class _MyDialPadWidget extends State<DialPadWidget>
   @override
   initState() {
     super.initState();
+    handleDeepLink();
     receivedMsg = "";
     _bindEventListeners();
     _loadSettings();
+
   }
+
+  Future<void> handleDeepLink() async {
+    uri = await getInitialUri();
+
+    if (uri != null) {
+      final String? textitoParam = uri!.queryParameters['textito'];
+
+      if (textitoParam != null) {
+        setState(() {
+          textito = textitoParam;
+        });
+      }
+    }
+  }
+
 
   void _loadSettings() async {
     _preferences = await SharedPreferences.getInstance();
-    _dest = _preferences.getString('dest') ?? 'sip:hello_jssip@tryit.jssip.net';
+    _dest = textito.isNotEmpty ? textito : _preferences.getString('dest') ?? 'sip:hello_jssip@tryit.jssip.net';
     _textController = TextEditingController(text: _dest);
     _textController!.text = _dest!;
 
@@ -296,7 +318,7 @@ class _MyDialPadWidget extends State<DialPadWidget>
                     padding: const EdgeInsets.all(6.0),
                     child: Center(
                         child: Text(
-                      'Received Message: $receivedMsg',
+                      'Received Message: $textito',
                       style: TextStyle(fontSize: 14, color: Colors.black54),
                     )),
                   ),

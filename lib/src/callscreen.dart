@@ -565,18 +565,28 @@ class _MyCallScreenWidget extends State<CallScreenWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        // Bloquea el botón de regresar
+        return false;
+      },
+      child: Scaffold(
         appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: Text('[$direction] ${EnumHelper.getName(_state)}')),
+          automaticallyImplyLeading: false,
+          title: Text('[$direction] ${EnumHelper.getName(_state)}'),
+        ),
         body: Container(
           child: _buildContent(),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Padding(
-            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 24.0),
-            child: Container(width: 320, child: _buildActionButtons())));
+          padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 24.0),
+          child: Container(width: 320, child: _buildActionButtons()),
+        ),
+      ),
+    );
   }
+
 
   @override
   void onNewMessage(SIPMessageRequest msg) {
