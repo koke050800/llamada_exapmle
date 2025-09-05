@@ -4,7 +4,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sip_ua/sip_ua.dart';
-import 'package:uni_links/uni_links.dart';
+
 
 import 'widgets/action_button.dart';
 
@@ -127,7 +127,7 @@ class _MyDialPadWidget extends State<DialPadWidget>
       },
     };
 
-    helper!.call(dest, voiceonly: voiceOnly, mediaStream: mediaStream, customOptions: customOptions);
+    helper!.call(dest, voiceOnly: voiceOnly, mediaStream: mediaStream, customOptions: customOptions);
     _preferences.setString('dest', dest);
     return null;
   }
@@ -357,4 +357,9 @@ class _MyDialPadWidget extends State<DialPadWidget>
 
   @override
   void onNewNotify(Notify ntf) {}
+
+  @override
+  void onNewReinvite(ReInvite event) {
+    // TODO: implement onNewReinvite
+  }
 }
